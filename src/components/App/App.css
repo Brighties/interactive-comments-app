@@ -1,0 +1,26 @@
+.flex {
+  display: flex;
+}
+.header {
+  align-items: center;
+  gap: 1rem;
+}
+
+/* buttons */
+.btn {
+  gap: 1rem;
+  align-items: center;
+}
+
+.vote-btn {
+  border: transparent;
+  padding-block: 0.5rem;
+  cursor: pointer;
+}
+
+/* reply button */
+.reply-btn {
+  border: transparent;
+  background: transparent;
+  cursor: pointer;
+}
