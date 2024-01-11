@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 
 import iconMinus from "../../images/icon-minus.svg";
@@ -27,7 +27,7 @@ function App() {
   }, []);
 
   if (loading) {
-    return <p>Loading...</p>; // You can replace this with a loading spinner or component
+    return <p>Loading...</p>; //show loading ...
   }
 
   if (error) {
@@ -36,55 +36,85 @@ function App() {
 
   return (
     <>
-      <Header data={data} index={0} />
-      <Comments data={data} index={0} />
-      <Reply />
-      <Button />
+      <Comments data={data} />
     </>
   );
 }
 
+// full component
+const Comments = ({ data }) => {
+  return (
+    <section className="full-container flex">
+      <CommentHeader data={data} index={0} />
+      <CommentBody data={data} index={0} />
+
+      <div className="flex btn-container">
+        <VoteButton />
+        <ReplyButton />
+      </div>
+    </section>
+  );
+};
+
 // component 1
-const Header = ({ data, index }) => {
+const CommentHeader = ({ data, index }) => {
   const person = data.comments[index];
 
   return (
     <div className="header flex">
       <img src={person.user.image.png} alt="person avatar" />
       <h3>{person.user.username}</h3>
-      <p>{person.createdAt}</p>
+      <p className="time-of-comment">{person.createdAt}</p>
     </div>
   );
 };
 
 // component 2 = comments content body
-const Comments = ({ data, index }) => {
+const CommentBody = ({ data, index }) => {
   const comments = data.comments[index];
-  return <p>{comments.content}</p>;
+  return <p className="comment-content">{comments.content}</p>;
 };
 
 // component 3 = button
+const VoteButton = () => {
+  const voteCountRef = useRef(null);
+  const upVote = () => {
+    if (voteCountRef) {
+      let count = +voteCountRef.current.textContent;
+      count += 1;
+      voteCountRef.current.textContent = count;
+    }
+  };
 
-const Button = () => {
+  const downVote = () => {
+    if (voteCountRef) {
+      let count = +voteCountRef.current.textContent; //typecasting the count to Number type using the + sign
+      count = count - 1;
+      voteCountRef.current.textContent = count;
+    }
+  };
   return (
     <button className="flex btn vote-btn">
-      <img src={iconMinus} alt="icon" />
-      <span>12</span>
-      <img src={iconPlus} alt="icon" />
+      <img className="upvote-icon" onClick={upVote} src={iconPlus} alt="icon" />
+      <span ref={voteCountRef} className="vote-value">
+        12
+      </span>
+      <img
+        className="downvote-icon"
+        onClick={downVote}
+        src={iconMinus}
+        alt="icon"
+      />
     </button>
   );
 };
 
 // component 4
-const Reply = () => {
-  // used inline styling for the purpose of introducing variety in my code just for fun
-  const style = {
-    paddingInlineStart: 1 + "rem",
-  };
+const ReplyButton = () => {
   return (
-    <button className="btn reply-btn">
-      <img src={iconReply} />
-      <span style={style}>Reply</span>
+    <button className="btn reply-btn flex">
+      <img src={iconReply} alt="reply icon" />
+      <span>Reply</span>
     </button>
   );
 };
