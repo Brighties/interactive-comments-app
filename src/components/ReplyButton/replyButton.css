@@ -1,0 +1,7 @@
+/* reply button */
+.reply-btn {
+  border: transparent;
+  background: transparent;
+  cursor: pointer;
+  --gap: 0.2rem;
+}

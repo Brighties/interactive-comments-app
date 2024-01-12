@@ -1,0 +1,30 @@
+/* reply-textbox component */
+.reply-textbox-container {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1rem;
+}
+.reply-textbox {
+  grid-column: span 2;
+  border: 1px solid hsl(var(--light-grayish-blue));
+  border-radius: 10px;
+  max-width: 100%;
+  padding: 0.5rem;
+  resize: vertical;
+}
+.reply-textbox:focus {
+  outline: 1px solid hsl(var(--moderate-blue));
+}
+.current-user {
+  width: 40px;
+}
+.send-btn {
+  font-weight: 500;
+  font-size: 1rem;
+  text-transform: uppercase;
+  background: hsl(var(--moderate-blue));
+  color: hsl(var(--white));
+  padding-inline: 2rem;
+  border-radius: 10px;
+  border: transparent;
+}

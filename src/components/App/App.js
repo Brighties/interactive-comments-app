@@ -1,10 +1,13 @@
 import "./App.css";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-import iconMinus from "../../images/icon-minus.svg";
-import iconPlus from "../../images/icon-plus.svg";
-import iconReply from "../../images/icon-reply.svg";
+// importing the various components
+import CommentHeader from "../Header/commentheader";
+import CommentBody from "../Comments/commentBody";
+import VoteButton from "../Button/button";
+import ReplyButton from "../ReplyButton/replyButton";
+import ReplyTextbox from "../ReplyTextbox/replyTextbox";
 
 function App() {
   const [data, setData] = useState(null);
@@ -36,86 +39,44 @@ function App() {
 
   return (
     <>
-      <Comments data={data} />
+      {data.comments.map((comment, index) => (
+        <div key={index}>
+          <Comments personData={comment} index={index} />
+        </div>
+      ))}
+      <ReplyTextbox data={data} />
     </>
   );
 }
 
-// full component
-const Comments = ({ data }) => {
-  return (
-    <section className="full-container flex">
-      <CommentHeader data={data} index={0} />
-      <CommentBody data={data} index={0} />
+// full comments component
+const Comments = ({ personData, index }) => {
+  const { replies } = personData; // replies is an array
+  const length = replies ? replies.length : 0; // Check if replies is defined
 
-      <div className="flex btn-container">
-        <VoteButton />
-        <ReplyButton />
-      </div>
-    </section>
+  console.log(replies);
+
+  return (
+    <main>
+      <section className="comment-full-container container flex">
+        <CommentHeader personData={personData} index={index} />
+        <CommentBody personData={personData} index={index} />
+        <div className="flex btn-container">
+          <VoteButton personData={personData} index={index} />
+          <ReplyButton />
+        </div>
+      </section>
+
+      {length > 0 && (
+        //subcomments
+        <div>
+          {replies.map((reply, subIndex) => (
+            <Comments key={subIndex} personData={reply} index={subIndex} />
+          ))}
+        </div>
+      )}
+    </main>
   );
 };
 
-// component 1
-const CommentHeader = ({ data, index }) => {
-  const person = data.comments[index];
-
-  return (
-    <div className="header flex">
-      <img src={person.user.image.png} alt="person avatar" />
-      <h3>{person.user.username}</h3>
-      <p className="time-of-comment">{person.createdAt}</p>
-    </div>
-  );
-};
-
-// component 2 = comments content body
-const CommentBody = ({ data, index }) => {
-  const comments = data.comments[index];
-  return <p className="comment-content">{comments.content}</p>;
-};
-
-// component 3 = button
-const VoteButton = () => {
-  const voteCountRef = useRef(null);
-  const upVote = () => {
-    if (voteCountRef) {
-      let count = +voteCountRef.current.textContent;
-      count += 1;
-      voteCountRef.current.textContent = count;
-    }
-  };
-
-  const downVote = () => {
-    if (voteCountRef) {
-      let count = +voteCountRef.current.textContent; //typecasting the count to Number type using the + sign
-      count = count - 1;
-      voteCountRef.current.textContent = count;
-    }
-  };
-  return (
-    <button className="flex btn vote-btn">
-      <img className="upvote-icon" onClick={upVote} src={iconPlus} alt="icon" />
-      <span ref={voteCountRef} className="vote-value">
-        12
-      </span>
-      <img
-        className="downvote-icon"
-        onClick={downVote}
-        src={iconMinus}
-        alt="icon"
-      />
-    </button>
-  );
-};
-
-// component 4
-const ReplyButton = () => {
-  return (
-    <button className="btn reply-btn flex">
-      <img src={iconReply} alt="reply icon" />
-      <span>Reply</span>
-    </button>
-  );
-};
 export default App;

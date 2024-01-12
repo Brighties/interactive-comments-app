@@ -1,0 +1,7 @@
+/* header component */
+.header {
+  align-items: center;
+}
+.time-of-comment {
+  color: hsl(var(--grayish-blue));
+}
