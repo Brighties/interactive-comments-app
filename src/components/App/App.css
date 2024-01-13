@@ -43,3 +43,10 @@ button {
   padding: 1rem;
   border-radius: 10px;
 }
+
+/* subcomment container */
+.subcomment-container {
+  margin-inline-start: 1.3rem;
+  padding-inline-start: 1.3rem;
+  border-left: 2px solid hsl(var(--grayish-blue), 0.4);
+}

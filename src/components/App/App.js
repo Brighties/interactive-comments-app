@@ -50,31 +50,68 @@ function App() {
 }
 
 // full comments component
-const Comments = ({ personData, index }) => {
+// const Comments = ({ personData, index, style }) => {
+//   const { replies } = personData; // replies is an array
+//   const length = replies ? replies.length : 0; // Check if replies is defined
+
+//   console.log(replies);
+
+//   return (
+//     <main>
+//       <section className="comment-full-container container flex" style={style}>
+//         <CommentHeader personData={personData} index={index} />
+//         <CommentBody personData={personData} index={index} />
+//         <div className="flex btn-container">
+//           <VoteButton personData={personData} index={index} />
+//           <ReplyButton />
+//         </div>
+//       </section>
+
+//       {length > 0 && (
+//         //subcomments
+//         <div>
+//           {replies.map((reply, subIndex) => (
+//             <Comments
+//               style={{ marginLeft: "40px" }}
+//               key={subIndex}
+//               personData={reply}
+//               index={subIndex}
+//             />
+//           ))}
+//         </div>
+//       )}
+//     </main>
+//   );
+// };
+
+const Comments = ({ personData, index, style }) => {
   const { replies } = personData; // replies is an array
   const length = replies ? replies.length : 0; // Check if replies is defined
 
-  console.log(replies);
-
   return (
     <main>
-      <section className="comment-full-container container flex">
-        <CommentHeader personData={personData} index={index} />
-        <CommentBody personData={personData} index={index} />
-        <div className="flex btn-container">
-          <VoteButton personData={personData} index={index} />
-          <ReplyButton />
-        </div>
-      </section>
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        <section
+          className="comment-full-container container flex"
+          style={style}
+        >
+          <CommentHeader personData={personData} index={index} />
+          <CommentBody personData={personData} index={index} />
+          <div className="flex btn-container">
+            <VoteButton personData={personData} index={index} />
+            <ReplyButton />
+          </div>
+        </section>
 
-      {length > 0 && (
-        //subcomments
-        <div>
-          {replies.map((reply, subIndex) => (
-            <Comments key={subIndex} personData={reply} index={subIndex} />
-          ))}
-        </div>
-      )}
+        {length > 0 && (
+          // Subcomments
+          <div className="subcomment-container">
+            {replies.map((reply, subIndex) => (
+              <Comments key={subIndex} personData={reply} index={subIndex} />
+            ))}
+          </div>
+        )}
+      </div>
     </main>
   );
 };
