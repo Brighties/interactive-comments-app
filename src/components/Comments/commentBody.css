@@ -2,3 +2,7 @@
 .comment-content {
   color: hsl(var(--grayish-blue));
 }
+.user-being-replied {
+  color: hsl(var(--moderate-blue));
+  font-weight: 600;
+}

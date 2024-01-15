@@ -6,8 +6,10 @@ import axios from "axios";
 import CommentHeader from "../Header/commentheader";
 import CommentBody from "../Comments/commentBody";
 import VoteButton from "../Button/button";
-import ReplyButton from "../ReplyButton/replyButton";
+import { ReplyButton } from "../Button/button";
 import ReplyTextbox from "../ReplyTextbox/replyTextbox";
+import { DeleteButton } from "../Button/button";
+import { EditButton } from "../Button/button";
 
 function App() {
   const [data, setData] = useState(null);
@@ -41,7 +43,7 @@ function App() {
     <>
       {data.comments.map((comment, index) => (
         <div key={index}>
-          <Comments personData={comment} index={index} />
+          <Comments data={data} personData={comment} index={index} />
         </div>
       ))}
       <ReplyTextbox data={data} />
@@ -49,42 +51,7 @@ function App() {
   );
 }
 
-// full comments component
-// const Comments = ({ personData, index, style }) => {
-//   const { replies } = personData; // replies is an array
-//   const length = replies ? replies.length : 0; // Check if replies is defined
-
-//   console.log(replies);
-
-//   return (
-//     <main>
-//       <section className="comment-full-container container flex" style={style}>
-//         <CommentHeader personData={personData} index={index} />
-//         <CommentBody personData={personData} index={index} />
-//         <div className="flex btn-container">
-//           <VoteButton personData={personData} index={index} />
-//           <ReplyButton />
-//         </div>
-//       </section>
-
-//       {length > 0 && (
-//         //subcomments
-//         <div>
-//           {replies.map((reply, subIndex) => (
-//             <Comments
-//               style={{ marginLeft: "40px" }}
-//               key={subIndex}
-//               personData={reply}
-//               index={subIndex}
-//             />
-//           ))}
-//         </div>
-//       )}
-//     </main>
-//   );
-// };
-
-const Comments = ({ personData, index, style }) => {
+const Comments = ({ data, personData, index, style }) => {
   const { replies } = personData; // replies is an array
   const length = replies ? replies.length : 0; // Check if replies is defined
 
@@ -95,7 +62,7 @@ const Comments = ({ personData, index, style }) => {
           className="comment-full-container container flex"
           style={style}
         >
-          <CommentHeader personData={personData} index={index} />
+          <CommentHeader data={data} personData={personData} index={index} />
           <CommentBody personData={personData} index={index} />
           <div className="flex btn-container">
             <VoteButton personData={personData} index={index} />
@@ -107,8 +74,15 @@ const Comments = ({ personData, index, style }) => {
           // Subcomments
           <div className="subcomment-container">
             {replies.map((reply, subIndex) => (
-              <Comments key={subIndex} personData={reply} index={subIndex} />
+              <Comments
+                data={data}
+                key={subIndex}
+                personData={reply}
+                index={subIndex}
+              />
             ))}
+            <DeleteButton />
+            <EditButton />
           </div>
         )}
       </div>

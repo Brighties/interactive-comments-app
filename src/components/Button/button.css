@@ -5,6 +5,7 @@
 .btn {
   gap: 1rem;
   align-items: center;
+  cursor: pointer;
 }
 
 .vote-btn {
@@ -21,4 +22,25 @@
 .upvote-icon,
 .downvote-icon {
   padding: 0.5rem;
+}
+.delete-btn,
+.edit-btn {
+  background: transparent;
+  border: transparent;
+  padding: 0.5rem 1.2rem;
+  font-weight: 500;
+  font-size: 1.2rem;
+  border-radius: 7px;
+  color: hsl(var(--soft-red));
+  text-transform: capitalize;
+}
+.edit-btn {
+  color: hsl(var(--moderate-blue));
+}
+/* reply button */
+.reply-btn {
+  border: transparent;
+  background: transparent;
+  cursor: pointer;
+  --gap: 0.2rem;
 }
