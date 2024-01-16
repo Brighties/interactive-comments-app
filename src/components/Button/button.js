@@ -1,6 +1,8 @@
 import iconMinus from "../../images/icon-minus.svg";
 import iconPlus from "../../images/icon-plus.svg";
 import iconReply from "../../images/icon-reply.svg";
+import deleteIcon from "../../images/icon-delete.svg";
+import editIcon from "../../images/icon-edit.svg";
 import "./button.css";
 
 import { useRef } from "react";
@@ -39,16 +41,24 @@ const VoteButton = ({ personData, index }) => {
 };
 
 export const DeleteButton = () => (
-  <button className="btn delete-btn">Delete</button>
+  <button className="btn delete-btn">
+    <img src={deleteIcon} alt="" />
+    <span className="padding-x-small">Delete</span>
+  </button>
 );
 
-export const EditButton = () => <button className="btn edit-btn">Edit</button>;
+export const EditButton = () => (
+  <button className="btn edit-btn">
+    <img src={editIcon} alt="" className="edit-button-icon" />
+    <span className="padding-x-small edit-button-textcontent">edit</span>
+  </button>
+);
 
 export const ReplyButton = () => {
   return (
     <button className="btn reply-btn flex">
       <img src={iconReply} alt="reply icon" />
-      <span>Reply</span>
+      <span className="reply-button-text">Reply</span>
     </button>
   );
 };

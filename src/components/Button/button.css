@@ -11,17 +11,18 @@
 .vote-btn {
   border: transparent;
   padding-block: 0.5rem;
-  cursor: pointer;
   border-radius: 7px;
 }
 .vote-value {
   color: hsl(var(--moderate-blue));
   font-weight: 700;
   font-size: 1.1rem;
+  cursor: default;
 }
 .upvote-icon,
 .downvote-icon {
   padding: 0.5rem;
+  cursor: pointer;
 }
 .delete-btn,
 .edit-btn {
@@ -33,6 +34,7 @@
   border-radius: 7px;
   color: hsl(var(--soft-red));
   text-transform: capitalize;
+  transition: var(--transition);
 }
 .edit-btn {
   color: hsl(var(--moderate-blue));
@@ -43,4 +45,22 @@
   background: transparent;
   cursor: pointer;
   --gap: 0.2rem;
+  padding: 0.5rem 1.2rem;
+  border-radius: 7px;
+}
+.reply-button-text {
+  color: hsl(var(--moderate-blue));
+  font-weight: 600;
+}
+/* utility class */
+.padding-x-small {
+  padding-inline-start: 0.5rem;
+}
+
+.reply-btn:hover,
+.edit-btn:hover {
+  background-color: hsl(var(--moderate-blue), 0.2);
+}
+.delete-btn:hover {
+  background: hsl(var(--soft-red), 0.5);
 }

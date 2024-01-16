@@ -51,22 +51,34 @@ function App() {
   );
 }
 
-const Comments = ({ data, personData, index, style }) => {
+const Comments = ({ data, personData, index }) => {
+  const { currentUser } = data;
+  const { user } = personData;
+  const { username } = user;
+
+  let isCurrentUser = false;
+  if (currentUser.username) {
+    isCurrentUser = username === currentUser.username;
+  }
+  console.log(isCurrentUser);
   const { replies } = personData; // replies is an array
   const length = replies ? replies.length : 0; // Check if replies is defined
 
   return (
     <main>
-      <div style={{ display: "flex", flexDirection: "column" }}>
-        <section
-          className="comment-full-container container flex"
-          style={style}
-        >
+      <div>
+        <section className="comment-full-container container flex">
           <CommentHeader data={data} personData={personData} index={index} />
           <CommentBody personData={personData} index={index} />
           <div className="flex btn-container">
             <VoteButton personData={personData} index={index} />
-            <ReplyButton />
+            {isCurrentUser ? (
+              <div>
+                <DeleteButton /> <EditButton />
+              </div>
+            ) : (
+              <ReplyButton />
+            )}
           </div>
         </section>
 
@@ -81,8 +93,6 @@ const Comments = ({ data, personData, index, style }) => {
                 index={subIndex}
               />
             ))}
-            <DeleteButton />
-            <EditButton />
           </div>
         )}
       </div>

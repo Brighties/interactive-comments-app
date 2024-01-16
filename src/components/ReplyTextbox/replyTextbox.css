@@ -11,9 +11,13 @@
   max-width: 100%;
   padding: 0.5rem;
   resize: vertical;
+  transition: var(--transition);
 }
 .reply-textbox:focus {
-  outline: 1px solid hsl(var(--moderate-blue));
+  outline: 0.5px solid hsl(var(--moderate-blue));
+}
+.reply-textbox:hover {
+  border: 1px solid hsl(var(--moderate-blue));
 }
 .current-user {
   width: 40px;
@@ -24,7 +28,12 @@
   text-transform: uppercase;
   background: hsl(var(--moderate-blue));
   color: hsl(var(--white));
-  padding-inline: 2rem;
+  padding: 1rem 2rem;
   border-radius: 10px;
   border: transparent;
+  transition: var(--transition);
+}
+.send-btn:hover {
+  cursor: pointer;
+  background-color: hsl(var(--moderate-blue), 0.5);
 }
