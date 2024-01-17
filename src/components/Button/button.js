@@ -40,8 +40,8 @@ const VoteButton = ({ personData, index }) => {
   );
 };
 
-export const DeleteButton = () => (
-  <button className="btn delete-btn">
+export const DeleteButton = ({ onClick }) => (
+  <button onClick={onClick} className="btn delete-btn">
     <img src={deleteIcon} alt="" />
     <span className="padding-x-small">Delete</span>
   </button>

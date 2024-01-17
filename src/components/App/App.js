@@ -1,8 +1,6 @@
 import "./App.css";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-
-// importing the various components
 import CommentHeader from "../Header/commentheader";
 import CommentBody from "../Comments/commentBody";
 import VoteButton from "../Button/button";
@@ -10,11 +8,17 @@ import { ReplyButton } from "../Button/button";
 import ReplyTextbox from "../ReplyTextbox/replyTextbox";
 import { DeleteButton } from "../Button/button";
 import { EditButton } from "../Button/button";
+import Modal from "../Modal/modal";
 
 function App() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const [modalData, setModalData] = useState({
+    isOpen: false,
+    itemToDelete: null,
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,6 +35,60 @@ function App() {
     fetchData();
   }, []);
 
+  const handleDeleteClick = (item) => {
+    console.log("delete", item);
+    setModalData({
+      isOpen: true,
+      itemToDelete: item,
+    });
+  };
+
+  // const handleDeleteConfirm = () => {
+  //   // Find and remove the itemToDelete from the data.comments array
+  //   const updatedComments = data.comments.filter((comment) => {
+  //     console.log(comment);
+  //     console.log(modalData.itemToDelete);
+
+  //     return comment !== modalData.itemToDelete;
+  //   });
+
+  //   // Update the data state with the modified comments
+  //   setData({
+  //     ...data,
+  //     comments: updatedComments,
+  //   });
+
+  //   // Close the modal
+  //   setModalData({
+  //     isOpen: false,
+  //     itemToDelete: null,
+  //   });
+  // };
+  const handleDeleteConfirm = () => {
+    // Find the index of the itemToDelete in the data.comments array
+    const indexToDelete = data.comments.findIndex(
+      (comment) => comment.id === modalData.itemToDelete.id
+    );
+
+    if (indexToDelete !== -1) {
+      // Create a new array without the itemToDelete using splice
+      const updatedComments = [...data.comments];
+      updatedComments.splice(indexToDelete, 1);
+
+      // Update the data state with the modified comments
+      setData({
+        ...data,
+        comments: updatedComments,
+      });
+
+      // Close the modal
+      setModalData({
+        isOpen: false,
+        itemToDelete: null,
+      });
+    }
+  };
+
   if (loading) {
     return <p>Loading...</p>; //show loading ...
   }
@@ -43,15 +101,29 @@ function App() {
     <>
       {data.comments.map((comment, index) => (
         <div key={index}>
-          <Comments data={data} personData={comment} index={index} />
+          <Comments
+            data={data}
+            personData={comment}
+            index={index}
+            onDeleteClick={handleDeleteClick}
+          />
         </div>
       ))}
       <ReplyTextbox data={data} />
+
+      {modalData.isOpen && (
+        <Modal
+          isOpen={modalData.isOpen}
+          itemToDelete={modalData.itemToDelete}
+          onConfirm={handleDeleteConfirm}
+          onCancel={() => setModalData({ isOpen: false, itemToDelete: null })}
+        />
+      )}
     </>
   );
 }
 
-const Comments = ({ data, personData, index }) => {
+const Comments = ({ data, personData, index, onDeleteClick }) => {
   const { currentUser } = data;
   const { user } = personData;
   const { username } = user;
@@ -60,9 +132,9 @@ const Comments = ({ data, personData, index }) => {
   if (currentUser.username) {
     isCurrentUser = username === currentUser.username;
   }
-  console.log(isCurrentUser);
-  const { replies } = personData; // replies is an array
-  const length = replies ? replies.length : 0; // Check if replies is defined
+
+  const { replies } = personData;
+  const length = replies ? replies.length : 0;
 
   return (
     <main>
@@ -74,7 +146,13 @@ const Comments = ({ data, personData, index }) => {
             <VoteButton personData={personData} index={index} />
             {isCurrentUser ? (
               <div>
-                <DeleteButton /> <EditButton />
+                <DeleteButton
+                  onClick={() => {
+                    console.log("delete button clicked");
+                    onDeleteClick(personData);
+                  }}
+                />
+                <EditButton />
               </div>
             ) : (
               <ReplyButton />
@@ -83,7 +161,6 @@ const Comments = ({ data, personData, index }) => {
         </section>
 
         {length > 0 && (
-          // Subcomments
           <div className="subcomment-container">
             {replies.map((reply, subIndex) => (
               <Comments
@@ -91,6 +168,7 @@ const Comments = ({ data, personData, index }) => {
                 key={subIndex}
                 personData={reply}
                 index={subIndex}
+                onDeleteClick={onDeleteClick}
               />
             ))}
           </div>
