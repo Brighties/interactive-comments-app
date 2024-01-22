@@ -8,6 +8,7 @@ import { ReplyButton } from "../Button/button";
 import ReplyTextbox from "../ReplyTextbox/replyTextbox";
 import { DeleteButton } from "../Button/button";
 import { EditButton } from "../Button/button";
+import { UpdateButton } from "../Button/button";
 import Modal from "../Modal/modal";
 
 function App() {
@@ -36,57 +37,50 @@ function App() {
   }, []);
 
   const handleDeleteClick = (item) => {
-    console.log("delete", item);
-    setModalData({
+    setModalData((prevState) => ({
       isOpen: true,
       itemToDelete: item,
-    });
+    }));
   };
 
-  // const handleDeleteConfirm = () => {
-  //   // Find and remove the itemToDelete from the data.comments array
-  //   const updatedComments = data.comments.filter((comment) => {
-  //     console.log(comment);
-  //     console.log(modalData.itemToDelete);
-
-  //     return comment !== modalData.itemToDelete;
-  //   });
-
-  //   // Update the data state with the modified comments
-  //   setData({
-  //     ...data,
-  //     comments: updatedComments,
-  //   });
-
-  //   // Close the modal
-  //   setModalData({
-  //     isOpen: false,
-  //     itemToDelete: null,
-  //   });
-  // };
   const handleDeleteConfirm = () => {
-    // Find the index of the itemToDelete in the data.comments array
-    const indexToDelete = data.comments.findIndex(
-      (comment) => comment.id === modalData.itemToDelete.id
-    );
+    // Step 1: Grab the item to delete
+    const itemToDelete = modalData.itemToDelete;
 
-    if (indexToDelete !== -1) {
-      // Create a new array without the itemToDelete using splice
-      const updatedComments = [...data.comments];
-      updatedComments.splice(indexToDelete, 1);
+    // Step 2: Delete the item from data.comments (including replies)
+    setData((prevData) => {
+      const updatedComments = prevData.comments.map((comment) => {
+        if (comment.id === itemToDelete.id) {
+          // If the comment matches the item to delete, exclude it
+          return null;
+        }
 
-      // Update the data state with the modified comments
-      setData({
-        ...data,
-        comments: updatedComments,
+        const updatedReplies = comment.replies.filter(
+          (reply) => reply.id !== itemToDelete.id
+        );
+
+        return {
+          ...comment,
+          replies: updatedReplies,
+        };
       });
 
-      // Close the modal
-      setModalData({
-        isOpen: false,
-        itemToDelete: null,
-      });
-    }
+      // Remove comments with null (i.e., the ones to be deleted)
+      const filteredComments = updatedComments.filter(
+        (comment) => comment !== null
+      );
+
+      return {
+        ...prevData,
+        comments: filteredComments,
+      };
+    });
+
+    // Step 3: Close the modal
+    setModalData({
+      isOpen: false,
+      itemToDelete: null,
+    });
   };
 
   if (loading) {
@@ -106,6 +100,7 @@ function App() {
             personData={comment}
             index={index}
             onDeleteClick={handleDeleteClick}
+            setData={setData}
           />
         </div>
       ))}
@@ -123,10 +118,34 @@ function App() {
   );
 }
 
-const Comments = ({ data, personData, index, onDeleteClick }) => {
+const Comments = ({ data, personData, index, onDeleteClick, setData }) => {
   const { currentUser } = data;
   const { user } = personData;
   const { username } = user;
+
+  const [isEditMode, setEditMode] = useState(false);
+  const [editedContent, setEditedContent] = useState(personData.content);
+
+  const handleEditClick = () => {
+    setEditMode(true);
+  };
+
+  const handleUpdateClick = () => {
+    const updatedComments = data.comments.map((comment) => {
+      if (comment.id === personData.id) {
+        return { ...comment, content: editedContent };
+      }
+      return comment;
+    });
+
+    // Use the setData function from props
+    setData((prevData) => ({
+      ...prevData,
+      comments: updatedComments,
+    }));
+
+    setEditMode(false);
+  };
 
   let isCurrentUser = false;
   if (currentUser.username) {
@@ -141,19 +160,29 @@ const Comments = ({ data, personData, index, onDeleteClick }) => {
       <div>
         <section className="comment-full-container container flex">
           <CommentHeader data={data} personData={personData} index={index} />
-          <CommentBody personData={personData} index={index} />
+          {isEditMode ? (
+            <textarea
+              className="reply-textbox"
+              rows={5}
+              value={editedContent}
+              onChange={(e) => setEditedContent(e.target.value)}
+            />
+          ) : (
+            <CommentBody personData={personData} index={index} />
+          )}
           <div className="flex btn-container">
             <VoteButton personData={personData} index={index} />
             {isCurrentUser ? (
-              <div>
-                <DeleteButton
-                  onClick={() => {
-                    console.log("delete button clicked");
-                    onDeleteClick(personData);
-                  }}
-                />
-                <EditButton />
-              </div>
+              <>
+                {isEditMode ? (
+                  <UpdateButton onClick={handleUpdateClick} />
+                ) : (
+                  <div>
+                    <DeleteButton onClick={() => onDeleteClick(personData)} />
+                    <EditButton onClick={handleEditClick} />
+                  </div>
+                )}
+              </>
             ) : (
               <ReplyButton />
             )}
@@ -169,6 +198,7 @@ const Comments = ({ data, personData, index, onDeleteClick }) => {
                 personData={reply}
                 index={subIndex}
                 onDeleteClick={onDeleteClick}
+                setData={setData}
               />
             ))}
           </div>

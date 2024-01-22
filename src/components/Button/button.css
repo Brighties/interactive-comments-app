@@ -64,3 +64,19 @@
 .delete-btn:hover {
   background: hsl(var(--soft-red), 0.5);
 }
+
+.update-btn {
+  font-weight: 500;
+  font-size: 1rem;
+  text-transform: uppercase;
+  background: hsl(var(--moderate-blue));
+  color: hsl(var(--white));
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  border: transparent;
+  transition: var(--transition);
+}
+.update-btn:hover {
+  cursor: pointer;
+  background-color: hsl(var(--moderate-blue), 0.5);
+}
