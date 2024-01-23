@@ -59,3 +59,19 @@ button {
   padding: 0.1rem 0.5rem;
   border-radius: 5px;
 }
+
+@media (min-width: 900px) {
+  .comment-full-container {
+    display: grid;
+    grid-template-columns: auto 1fr;
+  }
+  .btn-container {
+    order: -1;
+    align-items: flex-start;
+  }
+  .edit-and-delete-button-container,
+  .reply-btn {
+    position: absolute;
+    right: 2rem;
+  }
+}

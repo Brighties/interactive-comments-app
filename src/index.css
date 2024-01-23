@@ -3,6 +3,7 @@ body {
   caret-color: hsl(var(--light-grayish-blue));
   font-family: "Rubik", sans-serif;
   line-height: 1.4;
+  box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

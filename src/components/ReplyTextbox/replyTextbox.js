@@ -10,7 +10,7 @@ const ReplyTextbox = ({ data }) => {
         placeholder="Add a comment..."
       ></textarea>
       <img
-        className="current-user"
+        className="current-user-image"
         src={data.currentUser.image.png}
         alt="current user "
       />

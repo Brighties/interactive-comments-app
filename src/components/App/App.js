@@ -124,26 +124,12 @@ const Comments = ({ data, personData, index, onDeleteClick, setData }) => {
   const { username } = user;
 
   const [isEditMode, setEditMode] = useState(false);
-  const [editedContent, setEditedContent] = useState(personData.content);
 
   const handleEditClick = () => {
     setEditMode(true);
   };
 
   const handleUpdateClick = () => {
-    const updatedComments = data.comments.map((comment) => {
-      if (comment.id === personData.id) {
-        return { ...comment, content: editedContent };
-      }
-      return comment;
-    });
-
-    // Use the setData function from props
-    setData((prevData) => ({
-      ...prevData,
-      comments: updatedComments,
-    }));
-
     setEditMode(false);
   };
 
@@ -156,55 +142,51 @@ const Comments = ({ data, personData, index, onDeleteClick, setData }) => {
   const length = replies ? replies.length : 0;
 
   return (
-    <main>
-      <div>
-        <section className="comment-full-container container flex">
+    <>
+      <section className="comment-full-container container flex">
+        <div className="comment-header-and-body-container">
           <CommentHeader data={data} personData={personData} index={index} />
           {isEditMode ? (
-            <textarea
-              className="reply-textbox"
-              rows={5}
-              value={editedContent}
-              onChange={(e) => setEditedContent(e.target.value)}
-            />
+            <textarea className="reply-textbox" rows={5} />
           ) : (
             <CommentBody personData={personData} index={index} />
           )}
-          <div className="flex btn-container">
-            <VoteButton personData={personData} index={index} />
-            {isCurrentUser ? (
-              <>
-                {isEditMode ? (
-                  <UpdateButton onClick={handleUpdateClick} />
-                ) : (
-                  <div>
-                    <DeleteButton onClick={() => onDeleteClick(personData)} />
-                    <EditButton onClick={handleEditClick} />
-                  </div>
-                )}
-              </>
-            ) : (
-              <ReplyButton />
-            )}
-          </div>
-        </section>
+        </div>
 
-        {length > 0 && (
-          <div className="subcomment-container">
-            {replies.map((reply, subIndex) => (
-              <Comments
-                data={data}
-                key={subIndex}
-                personData={reply}
-                index={subIndex}
-                onDeleteClick={onDeleteClick}
-                setData={setData}
-              />
-            ))}
-          </div>
-        )}
-      </div>
-    </main>
+        <div className="btn-container">
+          <VoteButton personData={personData} index={index} />
+          {isCurrentUser ? (
+            <div className="edit-and-delete-button-container">
+              {isEditMode ? (
+                <UpdateButton onClick={handleUpdateClick} />
+              ) : (
+                <>
+                  <DeleteButton onClick={() => onDeleteClick(personData)} />
+                  <EditButton onClick={handleEditClick} />
+                </>
+              )}
+            </div>
+          ) : (
+            <ReplyButton />
+          )}
+        </div>
+      </section>
+
+      {length > 0 && (
+        <div className="subcomment-container">
+          {replies.map((reply, subIndex) => (
+            <Comments
+              data={data}
+              key={subIndex}
+              personData={reply}
+              index={subIndex}
+              onDeleteClick={onDeleteClick}
+              setData={setData}
+            />
+          ))}
+        </div>
+      )}
+    </>
   );
 };
 

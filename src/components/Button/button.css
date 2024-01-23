@@ -1,5 +1,6 @@
 /* buttons */
 .btn-container {
+  display: flex;
   justify-content: space-between;
 }
 .btn {
@@ -12,6 +13,7 @@
   border: transparent;
   padding-block: 0.5rem;
   border-radius: 7px;
+  max-width: max-content;
 }
 .vote-value {
   color: hsl(var(--moderate-blue));
@@ -79,4 +81,10 @@
 .update-btn:hover {
   cursor: pointer;
   background-color: hsl(var(--moderate-blue), 0.5);
+}
+
+@media (min-width: 900px) {
+  .vote-btn {
+    flex-direction: column;
+  }
 }
